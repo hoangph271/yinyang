@@ -60,8 +60,11 @@ const MediaList = styled(({ className }) => {
     }
     .title {
       background-color: rgba(99, 110, 114, 0.6);
+      text-overflow: ellipsis;
       position: absolute;
       text-align: center;
+      padding: 0 0.4rem;
+      overflow: hidden;
       bottom: 0;
       right: 0;
       left: 0;
