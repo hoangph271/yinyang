@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { LoginScreen, GalleryScreen } from './views'
+import { LoginScreen, GalleryScreen, NotFoundScreen } from './views'
 import { AuthProvider } from './providers'
 
 const AppRouter = () => {
@@ -10,11 +10,11 @@ const AppRouter = () => {
         <Route path="/auth">
           <LoginScreen />
         </Route>
-        <Route path="/" exact>
+        <Route path="/index">
           <GalleryScreen />
         </Route>
         <Route>
-          <div>{'404 | Not found'}</div>
+          <NotFoundScreen />
         </Route>
       </Switch>
     </BrowserRouter>
