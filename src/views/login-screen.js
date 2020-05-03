@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import { StandardLayout } from '../components'
 import { useAuth } from '../providers'
 import { useQuery } from '../hooks'
 
@@ -13,7 +14,7 @@ const LoginScreen = styled(({ className }) => {
     if (auth) {
       history.push(redirectUrl)
     }
-  }, [auth])
+  }, [auth, history, redirectUrl])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -21,14 +22,14 @@ const LoginScreen = styled(({ className }) => {
   }
 
   return (
-    <div className={className}>
+    <StandardLayout className={className}>
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="username" />
         <button type="submit">
           {'Login'}
         </button>
       </form>
-    </div>
+    </StandardLayout>
   )
 })``
 
