@@ -34,7 +34,7 @@ const thumbnailFromVideo = ({ video }) => {
 
 const SelectableVideo = styled(({ className }) => {
   const [src, setSrc] = useState(null)
-  const [filename, setFileName] = useState('')
+  const [title, setTitle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [fileType, setFileType] = useState(null)
   const history = useHistory()
@@ -52,7 +52,7 @@ const SelectableVideo = styled(({ className }) => {
       : await thumbnailFromImage({ image: imageEl.current })
 
     const formData = new FormData()
-    formData.append('filename', filename)
+    formData.append('title', title)
     formData.append('file', inputEl.current.files[0], inputEl.current.files[0].name)
     formData.append('thumbnail', blob, `${inputEl.current.files[0].name}.jpeg`)
 
@@ -68,7 +68,7 @@ const SelectableVideo = styled(({ className }) => {
 
       setSrc(src)
       setFileType(e.target.files[0].type)
-      setFileName(e.target.files[0].name)
+      setTitle(e.target.files[0].name)
     }
   }
 
@@ -91,7 +91,7 @@ const SelectableVideo = styled(({ className }) => {
       </div>
       <div className="right-panel">
         <input type="file" ref={inputEl} onChange={handleSrcChanged} accept="video/* image/*" />
-        <input placeholder="filename" value={filename} onChange={e => setFileName(e.target.value)} />
+        <input placeholder="title" value={title} onChange={e => setTitle(e.target.value)} />
         <button
           disabled={isLoading}
           onClick={handleSubmit}

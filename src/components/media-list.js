@@ -28,11 +28,11 @@ const MediaList = styled(({ className }) => {
       {medias && medias.map(media => (
         <article
           key={media._id}
-          alt={media.filename}
+          alt={media.metadata.title}
         >
           <div className="thumbnail" style={{ backgroundImage: `url(${API_ROOT}/files/${media._id}?thumbnail=1)` }}/>
           <div className="title">
-            {media.filename}
+            {media.metadata.title}
           </div>
         </article>
       ))}
