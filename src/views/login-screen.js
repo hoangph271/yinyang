@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { StandardLayout } from '../components'
@@ -6,9 +6,11 @@ import { useAuth } from '../providers'
 import { useQuery } from '../hooks'
 
 const LoginScreen = styled(({ className }) => {
-  const { auth, login } = useAuth()
+  const { auth, login, isLoading } = useAuth()
   const history = useHistory()
   const redirectUrl = useQuery().get('redirectUrl') || '/'
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
     if (auth) {
@@ -16,18 +18,38 @@ const LoginScreen = styled(({ className }) => {
     }
   }, [auth, history, redirectUrl])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    login()
+
+    await login({ username, password })
   }
 
   return (
     <StandardLayout className={className}>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="username" />
-        <button type="submit">
-          {'Login'}
-        </button>
+        <div>
+          <input
+            name="username"
+            type="text"
+            value={username}
+            placeholder="username"
+            onChange={e => setUsername(e.target.value)}
+          />
+        </div>
+        <div>
+          <input
+            name="password"
+            type="password"
+            value={password}
+            placeholder="password"
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <button type="submit" disabled={isLoading}>
+            {'Login'}
+          </button>
+        </div>
       </form>
     </StandardLayout>
   )
