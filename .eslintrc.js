@@ -22,6 +22,7 @@ module.exports = {
     'react'
   ],
   rules: {
-    'comma-dangle': ["error", "always-multiline"]
+    'comma-dangle': ["error", "always-multiline"],
+    'react/prop-types': 'off'
   }
 }
