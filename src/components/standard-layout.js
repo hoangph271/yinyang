@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { NavBar } from '../components'
 
 const navItems = [
-  { to: '/index', text: 'Home' },
-  { to: '/account', text: 'Account' },
   { to: '/gallery', text: 'Gallery' },
+  { to: '/upload', text: 'Upload' },
+  { to: '/account', text: 'Account' },
 ]
 const StandardLayout = styled(({ className, children }) => {
   return (
