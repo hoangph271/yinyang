@@ -1,8 +1,9 @@
 import React from 'react'
 import { MediaList, StandardLayout } from '../components'
 import { useAuthRequired } from '../hooks'
+import styled from 'styled-components'
 
-const GalleryScreen = ({ className }) => {
+const GalleryScreen = styled(({ className }) => {
   useAuthRequired()
 
   return (
@@ -10,6 +11,7 @@ const GalleryScreen = ({ className }) => {
       <MediaList />
     </StandardLayout>
   )
-}
+})`
+`
 
 export { GalleryScreen }
