@@ -1,26 +1,53 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
+import { THUMBNAIL } from '../consts'
 import _ from 'lodash'
+
+const calcCanvasSize = (width, height) => {
+  const ratio = width / height
+
+  return ratio >= THUMBNAIL.RATIO
+    ? [THUMBNAIL.MAX_WIDTH, THUMBNAIL.MAX_WIDTH / ratio]
+    : [THUMBNAIL.MAX_HEIGHT * ratio, THUMBNAIL.MAX_HEIGHT]
+}
+const thumbnailFromImage = ({ image }) => {
+  const { naturalWidth, naturalHeight } = image
+  const [canvasWidth, canvasHeight] = calcCanvasSize(naturalWidth, naturalHeight)
+
+  const canvas = new OffscreenCanvas(canvasWidth, canvasHeight)
+  const ctx = canvas.getContext('2d')
+  ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight)
+
+  return canvas.convertToBlob({ type: 'image/jpeg' })
+}
+const thumbnailFromVideo = ({ video }) => {
+  const { videoWidth, videoHeight } = video
+  const [canvasWidth, canvasHeight] = calcCanvasSize(videoWidth, videoHeight)
+
+  const canvas = new OffscreenCanvas(canvasWidth, canvasHeight)
+  const ctx = canvas.getContext('2d')
+  ctx.drawImage(video, 0, 0, canvasWidth, canvasHeight)
+
+  return canvas.convertToBlob({ type: 'image/jpeg' })
+}
 
 const SelectableVideo = styled(({ className }) => {
   const [src, setSrc] = useState(null)
   const [filename, setFileName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [fileType, setFileType] = useState(null)
   const inputEl = useRef(null)
   const videoEl = useRef(null)
+  const imageEl = useRef(null)
 
   const handleSubmit = async () => {
-    if (_.isNil(videoEl.current)) return
+    if (_.isNil(fileType)) return
 
     setIsLoading(true)
-    const video = videoEl.current
-    const { videoWidth, videoHeight } = video
 
-    const canvas = new OffscreenCanvas(videoWidth, videoHeight)
-    const ctx = canvas.getContext('2d')
-    ctx.drawImage(video, 0, 0, videoWidth, videoHeight)
-
-    const blob = await canvas.convertToBlob({ type: 'image/jpeg' })
+    const blob = fileType.includes('video')
+      ? await thumbnailFromVideo({ video: videoEl.current })
+      : await thumbnailFromImage({ image: imageEl.current })
 
     const formData = new FormData()
     formData.append('filename', filename)
@@ -37,6 +64,7 @@ const SelectableVideo = styled(({ className }) => {
       const src = URL.createObjectURL(e.target.files[0])
 
       setSrc(src)
+      setFileType(e.target.files[0].type)
       setFileName(e.target.files[0].name)
     }
   }
@@ -45,7 +73,13 @@ const SelectableVideo = styled(({ className }) => {
     <div className={className}>
       <div className="left-panel">
         {src ? (
-          <video src={src} ref={videoEl} controls muted />
+          <>
+            {fileType.includes('video') ? (
+              <video src={src} ref={videoEl} controls muted />
+            ) : (
+              <img src={src} ref={imageEl} alt="Selected media" />
+            )}
+          </>
         ) : (
           <div>
             {'Select a media...!'}
@@ -53,7 +87,7 @@ const SelectableVideo = styled(({ className }) => {
         )}
       </div>
       <div className="right-panel">
-        <input type="file" ref={inputEl} onChange={handleSrcChanged} accept="video/*" />
+        <input type="file" ref={inputEl} onChange={handleSrcChanged} accept="video/* image/*" />
         <input placeholder="filename" value={filename} onChange={e => setFileName(e.target.value)} />
         <button
           disabled={isLoading}
@@ -78,7 +112,7 @@ const SelectableVideo = styled(({ className }) => {
     justify-content: space-around;
   }
 
-  video {
+  video, img {
     max-width: calc(100% - 4rem);
   }
   canvas {
