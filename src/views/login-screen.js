@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useParams, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useAuth } from '../providers'
+import { useQuery } from '../hooks'
 
 const LoginScreen = styled(({ className }) => {
   const { auth, login } = useAuth()
   const history = useHistory()
-  const params = useParams()
+  const redirectUrl = useQuery().get('redirectUrl') || '/'
 
   useEffect(() => {
     if (auth) {
-      history.push(params.redirectUrl || '/')
+      history.push(redirectUrl)
     }
   }, [auth])
 
