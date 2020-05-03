@@ -26,13 +26,15 @@ const MediaList = styled(({ className }) => {
   return (
     <div className={className}>
       {medias && medias.map(media => (
-        <div
+        <article
           key={media._id}
           alt={media.filename}
-          style={{
-            backgroundImage: `url(${API_ROOT}/files/${media._id}?thumbnail=1)`,
-          }}
-        />
+        >
+          <div className="thumbnail" style={{ backgroundImage: `url(${API_ROOT}/files/${media._id}?thumbnail=1)` }}/>
+          <div className="title">
+            {media.filename}
+          </div>
+        </article>
       ))}
     </div>
   )
@@ -41,13 +43,32 @@ const MediaList = styled(({ className }) => {
   flex-wrap: wrap;
   justify-content: center;
 
-  div {
-    margin: 0.4rem;
+  article {
+    margin: 0.6rem;
     width: 20rem;
     height: 15rem;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: pointer;
+
+    .thumbnail {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex-grow: 1;
+    }
+    .title {
+      background-color: rgba(99, 110, 114, 0.6);
+      position: absolute;
+      text-align: center;
+      bottom: 0;
+      right: 0;
+      left: 0;
+    }
+  }
+  article:hover .title {
+    background-color: rgba(45, 52, 54, 0.8);
   }
 `
 
