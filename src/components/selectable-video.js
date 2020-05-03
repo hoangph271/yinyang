@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { THUMBNAIL } from '../consts'
 import _ from 'lodash'
+import { useHistory } from 'react-router-dom'
 
 const calcCanvasSize = (width, height) => {
   const ratio = width / height
@@ -36,6 +37,7 @@ const SelectableVideo = styled(({ className }) => {
   const [filename, setFileName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [fileType, setFileType] = useState(null)
+  const history = useHistory()
   const inputEl = useRef(null)
   const videoEl = useRef(null)
   const imageEl = useRef(null)
@@ -57,6 +59,7 @@ const SelectableVideo = styled(({ className }) => {
     await fetch('http://localhost:8080/files', { method: 'POST', body: formData })
 
     setIsLoading(false)
+    history.push('/gallery')
   }
 
   const handleSrcChanged = (e) => {
