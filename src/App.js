@@ -5,7 +5,7 @@ const App = styled(({ className }) => {
   return (
     <div className={[className, 'App'].join(' ')}>
       {<SelectableVideo />}
-      <MediaList />
+      {false && <MediaList />}
     </div>
   )
 })`
@@ -38,13 +38,6 @@ const MediaList = styled(({ className }) => {
       {medias && medias.map(media => (
         <div
           key={media._id}
-          onContextMenu={(e) => {
-            // TODO: Better this...!
-            // e.preventDefault()
-
-            // const confirmed = window.confirm('DELETE THIS...?')
-            // confirmed && fetch(`http://localhost:8080/files/${media._id}`, { method: 'DELETE' })
-          }}
         >
           <img
             alt={media.filename}
