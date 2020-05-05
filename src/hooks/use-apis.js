@@ -15,10 +15,10 @@ const useApis = () => {
     })
   }, [auth])
 
-  const postMedia = ({ body }) => fetch(`${API_ROOT}/files`, { method: 'POST', body, headers })
+  const postMedia = useCallback(({ body }) => fetch(`${API_ROOT}/files`, { method: 'POST', body, headers }), [headers])
   const getMedias = useCallback(() => fetch(`${API_ROOT}/files`, { headers }), [headers])
-  const getMedia = ({ _id }) => fetch(`${API_ROOT}/files/${_id}`, { headers })
-  const getUser = ({ _id = '' } = {}) => fetch(`${API_ROOT}/users/${_id}`, { headers })
+  const getMedia = useCallback(({ _id }) => fetch(`${API_ROOT}/files/${_id}`, { headers }), [headers])
+  const getUser = useCallback(({ _id = '' } = {}) => fetch(`${API_ROOT}/users/${_id}`, { headers }), [headers])
 
   return {
     postMedia,
