@@ -10,6 +10,11 @@ const useAuthRequired = () => {
     const redirectUrl = encodeURIComponent(`${location.pathname}${location.search}${location.hash}`)
     history.push(`/auth?redirectUrl=${redirectUrl}`)
   }
+
+  return {
+    authenticated: !!auth,
+    notAuthenticated: !auth,
+  }
 }
 
 export { useAuthRequired }

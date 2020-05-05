@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { LoginScreen, GalleryScreen, NotFoundScreen, UploadScreen } from './views'
+import * as Views from './views'
 import { AuthProvider } from './providers'
 
 const AppRouter = () => {
@@ -8,16 +8,19 @@ const AppRouter = () => {
     <BrowserRouter>
       <Switch>
         <Route path="/auth">
-          <LoginScreen />
+          <Views.LoginScreen />
         </Route>
         <Route path="/gallery">
-          <GalleryScreen />
+          <Views.GalleryScreen />
         </Route>
         <Route path="/upload">
-          <UploadScreen />
+          <Views.UploadScreen />
+        </Route>
+        <Route path="/account">
+          <Views.AccountScreen />
         </Route>
         <Route>
-          <NotFoundScreen />
+          <Views.NotFoundScreen />
         </Route>
       </Switch>
     </BrowserRouter>
