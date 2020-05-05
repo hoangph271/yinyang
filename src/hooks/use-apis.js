@@ -8,11 +8,13 @@ const useApis = () => {
     ...auth && { Authorization: `Bearer ${auth.jwt}` },
   }
 
-  const getMedias = async () => fetch(`${API_ROOT}/files`, { headers })
-  const getMedia = async ({ _id }) => fetch(`${API_ROOT}/files/${_id}`, { headers })
-  const getUser = async ({ _id = '' } = {}) => fetch(`${API_ROOT}/users/${_id}`, { headers })
+  const postMedia = ({ body }) => fetch(`${API_ROOT}/files`, { method: 'POST', body, headers })
+  const getMedias = () => fetch(`${API_ROOT}/files`, { headers })
+  const getMedia = ({ _id }) => fetch(`${API_ROOT}/files/${_id}`, { headers })
+  const getUser = ({ _id = '' } = {}) => fetch(`${API_ROOT}/users/${_id}`, { headers })
 
   return {
+    postMedia,
     getMedias,
     getMedia,
     getUser,

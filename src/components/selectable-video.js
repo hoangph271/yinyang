@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
-import { THUMBNAIL } from '../consts'
-import _ from 'lodash'
 import { useHistory } from 'react-router-dom'
+import _ from 'lodash'
+import { THUMBNAIL } from '../consts'
+import { useApis } from '../hooks'
 
 const calcCanvasSize = (width, height) => {
   const ratio = width / height
@@ -37,6 +38,7 @@ const SelectableVideo = styled(({ className }) => {
   const [title, setTitle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [fileType, setFileType] = useState(null)
+  const { postMedia } = useApis()
   const history = useHistory()
   const inputEl = useRef(null)
   const videoEl = useRef(null)
@@ -51,12 +53,12 @@ const SelectableVideo = styled(({ className }) => {
       ? await thumbnailFromVideo({ video: videoEl.current })
       : await thumbnailFromImage({ image: imageEl.current })
 
-    const formData = new FormData()
-    formData.append('title', title)
-    formData.append('file', inputEl.current.files[0], inputEl.current.files[0].name)
-    formData.append('thumbnail', blob, `${inputEl.current.files[0].name}.jpeg`)
+    const body = new FormData()
+    body.append('title', title)
+    body.append('file', inputEl.current.files[0], inputEl.current.files[0].name)
+    body.append('thumbnail', blob, `${inputEl.current.files[0].name}.jpeg`)
 
-    await fetch('http://localhost:8080/files', { method: 'POST', body: formData })
+    await postMedia({ body })
 
     setIsLoading(false)
     history.push('/gallery')
