@@ -11,7 +11,7 @@ const StandardLayout = styled(({ className, children }) => {
   return (
     <div className={className}>
       <NavBar navItems={navItems} />
-      <main>
+      <main className="main">
         {children}
       </main>
     </div>
@@ -26,7 +26,8 @@ const StandardLayout = styled(({ className, children }) => {
   font-size: calc(10px + 2vmin);
   color: white;
 
-  main {
+  .main {
+    display: flex;
     flex-grow: 1;
   }
 `
