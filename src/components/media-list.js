@@ -11,7 +11,7 @@ const MediaList = styled(({ className, onMediaClicked, medias }) => {
           alt={media.metadata.title}
           onClick={() => onMediaClicked({ media })}
         >
-          <div className="thumbnail" style={{ backgroundImage: `url(${API_ROOT}${media.signedUrl}` }}/>
+          <div className="thumbnail" style={{ backgroundImage: `url(${API_ROOT}${media.signedUrl}&thumbnail=1` }}/>
           <div className="title">
             {media.metadata.title}
           </div>
