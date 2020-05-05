@@ -104,6 +104,7 @@ const MediaViewer = styled(({ className }) => {
   }
 
   .media-wrapper {
+    justify-content: center;
     height: 100%;
     cursor: pointer;
     display: flex;
@@ -125,6 +126,7 @@ const MediaViewer = styled(({ className }) => {
   .image-media {
     max-width: 100%;
     max-height: calc(100% - 5rem);
+    outline: none;
   }
 `
 
