@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { MediaList, StandardLayout, MediaViewer } from '../components'
+import React, { useState, useEffect, useCallback } from 'react'
+import { MediaList, StandardLayout, MediaViewer, LoadmorePivot } from '../components'
 import { useAuthRequired, useApis } from '../hooks'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -7,28 +7,43 @@ import { useHistory, useLocation } from 'react-router-dom'
 const GalleryScreen = styled(({ className }) => {
   const { notAuthenticated } = useAuthRequired()
   const [medias, setMedias] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [total, setTotal] = useState(null)
+  const [page, setPage] = useState(-1)
   const history = useHistory()
   const location = useLocation()
   const { getMedias } = useApis()
   const mediaId = new URLSearchParams(location.search).get('mediaId')
 
-  useEffect(() => {
-    if (notAuthenticated) return
-    let isMounted = true
+  const handleLoadMore = useCallback(() => {
+    setPage(page => page + 1)
+  }, [])
 
-    getMedias()
+  useEffect(() => {
+    if (page === -1) return
+    if (notAuthenticated) return
+
+    let isMounted = true
+    setIsLoading(true)
+
+    getMedias({ page })
       .then(async res => {
         if (!(isMounted)) return
 
         if (res.ok) {
-          setMedias(await res.json())
+          const { total, files: medias } = await res.json()
+
+          setMedias(prev => [...(prev || []), ...medias])
+          setTotal(total)
         }
+
+        setIsLoading(false)
       })
 
     return () => {
       isMounted = false
     }
-  }, [getMedias, notAuthenticated])
+  }, [getMedias, notAuthenticated, page])
 
   const handleMediaClicked = ({ media }) => {
     history.push({
@@ -41,12 +56,24 @@ const GalleryScreen = styled(({ className }) => {
   return (
     <StandardLayout className={className}>
       {mediaId && <MediaViewer id={mediaId} />}
-      {medias && (
+      <div className="gallery-wrapper">
         <MediaList medias={medias} onMediaClicked={handleMediaClicked} />
-      )}
+        {total !== (medias || []).length && (
+          <LoadmorePivot
+            isLoading={isLoading}
+            onPivotReached={handleLoadMore}
+          />
+        )}
+      </div>
     </StandardLayout>
   )
 })`
+  .gallery-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+  }
 `
 
 export { GalleryScreen }
