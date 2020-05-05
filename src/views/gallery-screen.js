@@ -18,8 +18,10 @@ const GalleryScreen = styled(({ className }) => {
 
     getMedias()
       .then(async res => {
+        if (!(isMounted)) return
+
         if (res.ok) {
-          isMounted && setMedias(await res.json())
+          setMedias(await res.json())
         }
       })
 
