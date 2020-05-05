@@ -12,7 +12,7 @@ const MediaViewer = styled(({ className }) => {
 
   useEffect(() => {
     setMedia((state || {}).media)
-  }, [_id])
+  }, [_id, state])
   useEffect(() => {
     if (_.isNil(media)) {
       // TODO: Fetch media

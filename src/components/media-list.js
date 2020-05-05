@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { API_ROOT } from '../consts'
-import { useLocation } from 'react-router-dom'
 
 const MediaList = styled(({ className, onMediaClicked }) => {
   const [medias, setMedias] = useState(null)
