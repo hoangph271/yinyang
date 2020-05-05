@@ -8,19 +8,19 @@ const GalleryScreen = styled(({ className }) => {
   useAuthRequired()
   const history = useHistory()
   const location = useLocation()
-  const viewMedia = new URLSearchParams(location.search).get('viewMedia')
+  const mediaId = new URLSearchParams(location.search).get('mediaId')
 
   const handleMediaClicked = ({ media }) => {
     history.push({
       ...location,
       state: { media },
-      search: `${location.search || '?'}&viewMedia=${media._id}`,
+      search: `${location.search || '?'}&mediaId=${media._id}`,
     })
   }
 
   return (
     <StandardLayout className={className}>
-      {viewMedia && <MediaViewer id={viewMedia} />}
+      {mediaId && <MediaViewer id={mediaId} />}
       <MediaList onMediaClicked={handleMediaClicked} />
     </StandardLayout>
   )

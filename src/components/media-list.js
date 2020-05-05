@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { API_ROOT } from '../consts'
+import { fetchMedias } from '../apis'
 
 const MediaList = styled(({ className, onMediaClicked }) => {
   const [medias, setMedias] = useState(null)
@@ -8,15 +9,12 @@ const MediaList = styled(({ className, onMediaClicked }) => {
   useEffect(() => {
     let isMounted = true
 
-    const fetchMedias = async () => {
-      const res = await fetch('http://localhost:8080/files')
-
-      if (res.ok) {
-        isMounted && setMedias(await res.json())
-      }
-    }
-
     fetchMedias()
+      .then(async res => {
+        if (res.ok) {
+          isMounted && setMedias(await res.json())
+        }
+      })
 
     return () => {
       isMounted = false
@@ -31,7 +29,7 @@ const MediaList = styled(({ className, onMediaClicked }) => {
           alt={media.metadata.title}
           onClick={() => onMediaClicked({ media })}
         >
-          <div className="thumbnail" style={{ backgroundImage: `url(${API_ROOT}/files/${media._id}?thumbnail=1)` }}/>
+          <div className="thumbnail" style={{ backgroundImage: `url(${API_ROOT}/files/raw/${media._id}?thumbnail=1)` }}/>
           <div className="title">
             {media.metadata.title}
           </div>
