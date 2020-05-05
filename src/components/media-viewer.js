@@ -13,7 +13,7 @@ const MediaViewer = styled(({ className }) => {
   const mediaId = new URLSearchParams(search).get('mediaId')
   const history = useHistory()
 
-  const handleTitleClicked = (e) => {
+  const handleCloseMedia = (e) => {
     const searchParams = new URLSearchParams(search)
     searchParams.delete('mediaId')
 
@@ -55,19 +55,24 @@ const MediaViewer = styled(({ className }) => {
   const mediaType = ['video', 'image'].find(type => media.metadata.mimeType.includes(type))
 
   return (
-    <dialog className={className} ref={dialogEl}>
-      <div className="title" onClick={handleTitleClicked}>{media.metadata.title}</div>
-      {mediaType === 'video' && (
-        <div className="video-media">
-          <video src={`${API_ROOT}/files/raw/${media._id}`} controls />
-        </div>
-      )}
-      {mediaType === 'image' && (
-        <div
-          className="image-media"
-          style={{ backgroundImage: `url(${API_ROOT}/files/raw/${media._id})` }}
-        />
-      )}
+    <dialog className={className} ref={dialogEl} onClick={handleCloseMedia}>
+      <div className="media-wrapper" onClick={e => e.stopPropagation()}>
+        <div className="title">{media.metadata.title}</div>
+        {mediaType === 'video' && (
+          <video
+            muted
+            controls
+            className="video-media"
+            src={`${API_ROOT}/files/raw/${media._id}`}
+          />
+        )}
+        {mediaType === 'image' && (
+          <img
+            className="image-media"
+            src={`${API_ROOT}/files/raw/${media._id}`}
+          />
+        )}
+      </div>
     </dialog>
   )
 })`
@@ -88,18 +93,19 @@ const MediaViewer = styled(({ className }) => {
   flex-direction: column;
   color: #b2bec3;
   text-align: center;
-
-  & > * {
-    margin: 1.4rem;
-  }
+  justify-content: center;
+  align-items: center;
 
   &[open] {
     width: 100%;
   }
 
-  .title:hover {
-    text-decoration: line-through;
+  .media-wrapper {
     cursor: pointer;
+  }
+  .title {
+    cursor: pointer;
+    margin-bottom: 0.6rem;
   }
   .loading-indicator {
     display: flex;
@@ -110,15 +116,10 @@ const MediaViewer = styled(({ className }) => {
   }
   .video-media {
     flex-grow: 1;
-    justify-content: center;
-    align-items: center;
     display: flex;
   }
   .image-media {
-    flex-grow: 1;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    max-width: calc(100% - 2rem);
   }
 `
 
