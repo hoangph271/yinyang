@@ -105,7 +105,7 @@ const MediaViewer = styled(({ className }) => {
 
   .media-wrapper {
     justify-content: center;
-    height: 100%;
+    max-height: calc(100% - 2rem);
     cursor: pointer;
     display: flex;
     flex-direction: column;
