@@ -9,14 +9,14 @@ const GalleryScreen = styled(({ className }) => {
   const [medias, setMedias] = useState(null)
   const history = useHistory()
   const location = useLocation()
-  const { fetchMedias } = useApis()
+  const { getMedias } = useApis()
   const mediaId = new URLSearchParams(location.search).get('mediaId')
 
   useEffect(() => {
     if (notAuthenticated) return
     let isMounted = true
 
-    fetchMedias()
+    getMedias()
       .then(async res => {
         if (res.ok) {
           isMounted && setMedias(await res.json())
@@ -26,7 +26,7 @@ const GalleryScreen = styled(({ className }) => {
     return () => {
       isMounted = false
     }
-  }, [fetchMedias, notAuthenticated])
+  }, [getMedias, notAuthenticated])
 
   const handleMediaClicked = ({ media }) => {
     history.push({

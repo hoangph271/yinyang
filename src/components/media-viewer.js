@@ -14,7 +14,7 @@ const MediaViewer = styled(({ className }) => {
   const dialogEl = useRef(null)
   const mediaId = new URLSearchParams(search).get('mediaId')
   const history = useHistory()
-  const { fetchMedia } = useApis()
+  const { getMedia } = useApis()
 
   const handleCloseMedia = (e) => {
     const searchParams = new URLSearchParams(search)
@@ -36,7 +36,7 @@ const MediaViewer = styled(({ className }) => {
     let isMounted = true
 
     if (_.isNil(media)) {
-      fetchMedia({ _id: mediaId })
+      getMedia({ _id: mediaId })
         .then(async res => {
           if (res.ok) {
             isMounted && setMedia(await res.json())
@@ -50,7 +50,7 @@ const MediaViewer = styled(({ className }) => {
     dialogEl.current.show()
 
     return () => { isMounted = false }
-  }, [media, mediaId, fetchMedia, notAuthenticated, error])
+  }, [media, mediaId, getMedia, notAuthenticated, error])
 
   if (_.isNil(media) || error) {
     return (

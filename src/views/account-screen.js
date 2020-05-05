@@ -8,7 +8,7 @@ const AccountScreen = styled(({ className }) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [user, setUser] = useState(null)
-  const { fetchUser } = useApis()
+  const { getUser } = useApis()
 
   useEffect(() => {
     if (notAuthenticated) return
@@ -16,7 +16,7 @@ const AccountScreen = styled(({ className }) => {
     let isMounted = true
     setIsLoading(isLoading)
 
-    fetchUser().then(async res => {
+    getUser().then(async res => {
       if (isMounted && res.ok) {
         const user = await res.json()
         setUser(user)
@@ -25,7 +25,7 @@ const AccountScreen = styled(({ className }) => {
     })
 
     return () => { isMounted = false }
-  }, [fetchUser, isLoading, notAuthenticated])
+  }, [getUser, isLoading, notAuthenticated])
 
   return (
     <StandardLayout className={className}>

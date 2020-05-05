@@ -8,14 +8,14 @@ const useApis = () => {
     ...auth && { Authorization: `Bearer ${auth.jwt}` },
   }
 
-  const fetchMedias = async () => fetch(`${API_ROOT}/files`, { headers })
-  const fetchMedia = async ({ _id }) => fetch(`${API_ROOT}/files/${_id}`, { headers })
-  const fetchUser = async ({ _id = '' } = {}) => fetch(`${API_ROOT}/users/${_id}`, { headers })
+  const getMedias = async () => fetch(`${API_ROOT}/files`, { headers })
+  const getMedia = async ({ _id }) => fetch(`${API_ROOT}/files/${_id}`, { headers })
+  const getUser = async ({ _id = '' } = {}) => fetch(`${API_ROOT}/users/${_id}`, { headers })
 
   return {
-    fetchMedias,
-    fetchMedia,
-    fetchUser,
+    getMedias,
+    getMedia,
+    getUser,
   }
 }
 
