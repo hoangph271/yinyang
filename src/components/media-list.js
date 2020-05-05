@@ -1,26 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { API_ROOT } from '../consts'
-import { fetchMedias } from '../apis'
 
-const MediaList = styled(({ className, onMediaClicked }) => {
-  const [medias, setMedias] = useState(null)
-
-  useEffect(() => {
-    let isMounted = true
-
-    fetchMedias()
-      .then(async res => {
-        if (res.ok) {
-          isMounted && setMedias(await res.json())
-        }
-      })
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
-
+const MediaList = styled(({ className, onMediaClicked, medias }) => {
   return (
     <div className={className}>
       {medias && medias.map(media => (

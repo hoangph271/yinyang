@@ -1,14 +1,32 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { MediaList, StandardLayout, MediaViewer } from '../components'
-import { useAuthRequired } from '../hooks'
+import { useAuthRequired, useApis } from '../hooks'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
 
 const GalleryScreen = styled(({ className }) => {
-  useAuthRequired()
+  const { notAuthenticated } = useAuthRequired()
+  const [medias, setMedias] = useState(null)
   const history = useHistory()
   const location = useLocation()
+  const { fetchMedias } = useApis()
   const mediaId = new URLSearchParams(location.search).get('mediaId')
+
+  useEffect(() => {
+    if (notAuthenticated) return
+    let isMounted = true
+
+    fetchMedias()
+      .then(async res => {
+        if (res.ok) {
+          isMounted && setMedias(await res.json())
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const handleMediaClicked = ({ media }) => {
     history.push({
@@ -21,7 +39,7 @@ const GalleryScreen = styled(({ className }) => {
   return (
     <StandardLayout className={className}>
       {mediaId && <MediaViewer id={mediaId} />}
-      <MediaList onMediaClicked={handleMediaClicked} />
+      <MediaList medias={medias} onMediaClicked={handleMediaClicked} />
     </StandardLayout>
   )
 })`

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { StandardLayout } from '../components'
-import { useApis } from '../hooks/use-apis'
-import { useAuthRequired } from '../hooks'
+import { useApis, useAuthRequired } from '../hooks'
 
 const AccountScreen = styled(({ className }) => {
   const { notAuthenticated } = useAuthRequired()
