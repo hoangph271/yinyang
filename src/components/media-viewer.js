@@ -46,7 +46,7 @@ const MediaViewer = styled(({ className }) => {
     dialogEl.current.show()
 
     return () => { isMounted = false }
-  }, [media, mediaId])
+  }, [media, mediaId, fetchMedia, notAuthenticated])
 
   if (_.isNil(media)) {
     return (

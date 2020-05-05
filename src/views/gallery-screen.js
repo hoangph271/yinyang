@@ -26,7 +26,7 @@ const GalleryScreen = styled(({ className }) => {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [fetchMedias, notAuthenticated])
 
   const handleMediaClicked = ({ media }) => {
     history.push({

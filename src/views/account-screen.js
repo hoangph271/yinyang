@@ -25,7 +25,7 @@ const AccountScreen = styled(({ className }) => {
     })
 
     return () => { isMounted = false }
-  }, [])
+  }, [fetchUser, isLoading, notAuthenticated])
 
   return (
     <StandardLayout className={className}>
