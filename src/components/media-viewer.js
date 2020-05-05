@@ -10,6 +10,7 @@ const MediaViewer = styled(({ className }) => {
   const location = useLocation()
   const { state, search } = location
   const [media, setMedia] = useState((state || {}).media)
+  const [error, setError] = useState(null)
   const dialogEl = useRef(null)
   const mediaId = new URLSearchParams(search).get('mediaId')
   const history = useHistory()
@@ -30,6 +31,7 @@ const MediaViewer = styled(({ className }) => {
   }, [mediaId, state])
   useEffect(() => {
     if (notAuthenticated) return
+    if (error) return
 
     let isMounted = true
 
@@ -38,20 +40,26 @@ const MediaViewer = styled(({ className }) => {
         .then(async res => {
           if (res.ok) {
             isMounted && setMedia(await res.json())
+            return
           }
-          // FIXME: What if NOT OK
+
+          setError(await res.text())
         })
     }
 
     dialogEl.current.show()
 
     return () => { isMounted = false }
-  }, [media, mediaId, fetchMedia, notAuthenticated])
+  }, [media, mediaId, fetchMedia, notAuthenticated, error])
 
-  if (_.isNil(media)) {
+  if (_.isNil(media) || error) {
     return (
-      <dialog className={className} ref={dialogEl} onWheel={e => e.preventDefault()}>
-        <div className="loading-indicator">{'Loading...!'}</div>
+      <dialog className={className} ref={dialogEl} onClick={handleCloseMedia}>
+        {error ? (
+          <div className="error-indicator">{error}</div>
+        ) : (
+          <div className="loading-indicator">{'Loading...!'}</div>
+        )}
       </dialog>
     )
   }
@@ -119,6 +127,7 @@ const MediaViewer = styled(({ className }) => {
     cursor: pointer;
     margin-bottom: 0.6rem;
   }
+  .error-indicator,
   .loading-indicator {
     display: flex;
     flex-grow: 1;
