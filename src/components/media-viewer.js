@@ -3,15 +3,17 @@ import styled from 'styled-components'
 import { useLocation, useHistory } from 'react-router-dom'
 import _ from 'lodash'
 import { API_ROOT } from '../consts'
-import { fetchMedia } from '../apis'
+import { useApis, useAuthRequired } from '../hooks'
 
 const MediaViewer = styled(({ className }) => {
+  const { notAuthenticated } = useAuthRequired()
   const location = useLocation()
   const { state, search } = location
   const [media, setMedia] = useState((state || {}).media)
   const dialogEl = useRef(null)
   const mediaId = new URLSearchParams(search).get('mediaId')
   const history = useHistory()
+  const { fetchMedia } = useApis()
 
   const handleCloseMedia = (e) => {
     const searchParams = new URLSearchParams(search)
@@ -27,6 +29,8 @@ const MediaViewer = styled(({ className }) => {
     setMedia((state || {}).media)
   }, [mediaId, state])
   useEffect(() => {
+    if (notAuthenticated) return
+
     let isMounted = true
 
     if (_.isNil(media)) {
@@ -63,14 +67,14 @@ const MediaViewer = styled(({ className }) => {
             muted
             controls
             className="video-media"
-            src={`${API_ROOT}/files/raw/${media._id}`}
+            src={`${API_ROOT}${media.signedUrl}`}
           />
         )}
         {mediaType === 'image' && (
           <img
             alt={media.title}
             className="image-media"
-            src={`${API_ROOT}/files/raw/${media._id}`}
+            src={`${API_ROOT}${media.signedUrl}`}
           />
         )}
       </div>

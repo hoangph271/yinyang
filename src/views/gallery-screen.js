@@ -39,7 +39,9 @@ const GalleryScreen = styled(({ className }) => {
   return (
     <StandardLayout className={className}>
       {mediaId && <MediaViewer id={mediaId} />}
-      <MediaList medias={medias} onMediaClicked={handleMediaClicked} />
+      {medias && (
+        <MediaList medias={medias} onMediaClicked={handleMediaClicked} />
+      )}
     </StandardLayout>
   )
 })`
