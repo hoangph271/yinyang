@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { API_ROOT } from '../consts'
+import { useLocation } from 'react-router-dom'
 
-const MediaList = styled(({ className }) => {
+const MediaList = styled(({ className, onMediaClicked }) => {
   const [medias, setMedias] = useState(null)
 
   useEffect(() => {
@@ -29,6 +30,7 @@ const MediaList = styled(({ className }) => {
         <article
           key={media._id}
           alt={media.metadata.title}
+          onClick={() => onMediaClicked({ media })}
         >
           <div className="thumbnail" style={{ backgroundImage: `url(${API_ROOT}/files/${media._id}?thumbnail=1)` }}/>
           <div className="title">
