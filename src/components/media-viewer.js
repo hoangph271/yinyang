@@ -42,7 +42,7 @@ const MediaViewer = styled(({ className }) => {
     dialogEl.current.show()
 
     return () => { isMounted = false }
-  }, [media])
+  }, [media, mediaId])
 
   if (_.isNil(media)) {
     return (
@@ -57,7 +57,7 @@ const MediaViewer = styled(({ className }) => {
   return (
     <dialog className={className} ref={dialogEl} onClick={handleCloseMedia}>
       <div className="media-wrapper" onClick={e => e.stopPropagation()}>
-        <div className="title">{media.metadata.title}</div>
+        <span className="title">{media.metadata.title}</span>
         {mediaType === 'video' && (
           <video
             muted
@@ -68,6 +68,7 @@ const MediaViewer = styled(({ className }) => {
         )}
         {mediaType === 'image' && (
           <img
+            alt={media.title}
             className="image-media"
             src={`${API_ROOT}/files/raw/${media._id}`}
           />
@@ -95,6 +96,8 @@ const MediaViewer = styled(({ className }) => {
   text-align: center;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
+  padding: 0 1.4rem;
 
   &[open] {
     width: 100%;
@@ -102,6 +105,9 @@ const MediaViewer = styled(({ className }) => {
 
   .media-wrapper {
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .title {
     cursor: pointer;
@@ -119,7 +125,7 @@ const MediaViewer = styled(({ className }) => {
     display: flex;
   }
   .image-media {
-    max-width: calc(100% - 2rem);
+    max-width: 100%;
   }
 `
 
