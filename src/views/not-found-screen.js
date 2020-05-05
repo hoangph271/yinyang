@@ -5,14 +5,17 @@ import { StandardLayout } from '../components'
 const NotFoundScreen = styled(({ className }) => {
   return (
     <StandardLayout className={className}>
-      <div>
+      <div className="message">
         {'404 | Not found'}
       </div>
     </StandardLayout>
   )
 })`
-  div {
-    text-align: center;
+  .message {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `
 
