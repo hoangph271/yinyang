@@ -42,6 +42,8 @@ const MediaList = styled(({ className, onMediaClicked, medias }) => {
     .title {
       background-color: rgba(99, 110, 114, 0.6);
       text-overflow: ellipsis;
+      word-break: break-all;
+      white-space: nowrap;
       position: absolute;
       text-align: center;
       padding: 0 0.4rem;
