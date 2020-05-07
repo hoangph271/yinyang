@@ -7,11 +7,11 @@ const navItems = [
   { to: '/upload', text: 'Upload' },
   { to: '/account', text: 'Account' },
 ]
-const StandardLayout = styled(({ className, children }) => {
+const StandardLayout = styled(({ className, children, mainClassName = '' }) => {
   return (
     <div className={className}>
       <NavBar navItems={navItems} />
-      <main className="main">
+      <main className={['main', mainClassName].join(' ')}>
         {children}
       </main>
     </div>
