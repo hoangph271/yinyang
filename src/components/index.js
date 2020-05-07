@@ -1,5 +1,5 @@
 export { MediaList } from './media-list'
-export { SelectableVideo } from './selectable-video'
+export { UploadCard } from './upload-card'
 export { StandardLayout } from './standard-layout'
 export { NavBar } from './nav-bar'
 export { MediaViewer } from './media-viewer'

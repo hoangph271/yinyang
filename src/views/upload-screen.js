@@ -1,14 +1,16 @@
 import React from 'react'
-import { SelectableVideo, StandardLayout } from '../components'
-import { useAuthRequired } from '../hooks'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
+import { UploadCard, StandardLayout } from '../components'
+import { useAuthRequired } from '../hooks'
 
 const UploadScreen = styled(({ className }) => {
   useAuthRequired()
+  const history = useHistory()
 
   return (
     <StandardLayout className={className}>
-      <SelectableVideo />
+      <UploadCard onUploaded={() => history.push('/gallery')}/>
     </StandardLayout>
   )
 })`
