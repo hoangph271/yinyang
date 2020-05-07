@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import _ from 'lodash'
 import { THUMBNAIL } from '../consts'
 import { useApis, useCardSize } from '../hooks'
 import cardBgrdPng from '../assets/card-bgrd.png'
+import { MediaCard } from './media-card'
 
 const calcCanvasSize = (width, height) => {
   const ratio = width / height
@@ -33,8 +34,9 @@ const thumbnailFromVideo = ({ video }) => {
   return canvas.convertToBlob({ type: 'image/jpeg' })
 }
 
-const UploadCard = styled(({ initSrc = null, className, onUploaded }) => {
-  const [src, setSrc] = useState(initSrc)
+const UploadCard = styled(({ initFile = null, className, onUploaded = () => {}, initUpload }) => {
+  const [uploaded, setUploaded] = useState(false)
+  const [src, setSrc] = useState(null)
   const [title, setTitle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [fileType, setFileType] = useState(null)
@@ -47,43 +49,76 @@ const UploadCard = styled(({ initSrc = null, className, onUploaded }) => {
   const previewPanelRef = useRef(null)
 
   useEffect(() => {
+    if (uploaded) return
+    if (!(initUpload)) return
+
+    console.info('src')
+  }, [initUpload, uploaded])
+
+  useEffect(() => {
     if (_.isNil(previewPanelRef.current)) return
 
     setVideoHeight(previewPanelRef.current.clientHeight)
   }, [])
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    if (_.isNil(fileType)) return
+
+    if (fileType.includes('video')) {
+      setIsLoading(true)
+      const { current: video } = videoRef
+
+      video.addEventListener('loadedmetadata', () => {
+        video.currentTime = 0.15 * video.duration
+        setIsLoading(false)
+      })
+    }
+  }, [fileType])
+
+  const handleUploadClicked = async () => {
     if (_.isNil(fileType)) return
 
     setIsLoading(true)
 
+    const file = inputRef.current.files[0] || initFile
     const blob = fileType.includes('video')
       ? await thumbnailFromVideo({ video: videoRef.current })
       : await thumbnailFromImage({ image: imageRef.current })
 
     const body = new FormData()
     body.append('title', title)
-    body.append('file', inputRef.current.files[0], inputRef.current.files[0].name)
-    body.append('thumbnail', blob, `${inputRef.current.files[0].name}.jpeg`)
+    body.append('file', file, file.name)
+    body.append('thumbnail', blob, `${file.name}.jpeg`)
 
     await postMedia({ body })
 
     setIsLoading(false)
     onUploaded()
+    setUploaded(true)
   }
 
-  const handleSrcChanged = (e) => {
-    if (e.target.files[0]) {
-      const src = URL.createObjectURL(e.target.files[0])
+  const handleFileChanged = useCallback(file => {
+    const src = URL.createObjectURL(file)
 
-      setSrc(src)
-      setFileType(e.target.files[0].type)
-      setTitle(e.target.files[0].name)
-    }
+    setSrc(src)
+    setFileType(file.type)
+    setTitle(file.name)
+  }, [])
+
+  useEffect(() => {
+    if (_.isNil(initFile)) return
+
+    handleFileChanged(initFile)
+  }, [initFile, handleFileChanged])
+
+  const handleSrcChanged = (e) => {
+    if (_.isNil(e.target.files[0])) return
+
+    handleFileChanged(e.target.files[0])
   }
 
   return (
-    <div className={className} style={{ width, height }}>
+    <MediaCard className={className} style={{ width, height }}>
       <div
         ref={previewPanelRef}
         className={['preview-panel', _.isNil(src) ? 'waiting' : ''].join(' ')}
@@ -115,26 +150,18 @@ const UploadCard = styled(({ initSrc = null, className, onUploaded }) => {
           <input placeholder="title" type="text" value={title} onChange={e => setTitle(e.target.value)} />
         </div>
         <button
-          disabled={isLoading}
-          onClick={handleSubmit}
+          disabled={isLoading || uploaded}
+          onClick={handleUploadClicked}
         >
-          {'Submit'}
+          {uploaded ? 'N/A' : 'Upload'}
         </button>
       </div>
-    </div>
+    </MediaCard>
   )
 })`
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: column;
-  border: 2px solid rgba(108, 92, 231,1.0);
-  border-radius: 2px;
-  box-sizing: border-box;
-  padding: 0.4rem;
-  border-radius: 0.5rem;
-
   .preview-panel {
     display: flex;
+    width: 100%;
     flex-grow: 1;
   }
   .preview-panel.waiting {
@@ -146,6 +173,7 @@ const UploadCard = styled(({ initSrc = null, className, onUploaded }) => {
     background-repeat: no-repeat;
   }
   .control-panel {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

@@ -1,19 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
-import { UploadCard, StandardLayout } from '../components'
+import { UploadCard, StandardLayout, SelectFilesCard } from '../components'
 import { useAuthRequired } from '../hooks'
 
 const UploadScreen = styled(({ className }) => {
+  const [files, setFiles] = useState([])
   useAuthRequired()
-  const history = useHistory()
 
   return (
-    <StandardLayout className={className}>
-      <UploadCard onUploaded={() => history.push('/gallery')}/>
+    <StandardLayout className={className} mainClassName="wrapper">
+      <SelectFilesCard
+        onChange={(e) => {
+          const { files } = e.target
+          setFiles(srcs => [...srcs, ...files])
+        }}
+      />
+      {files.map((src, i) => (
+        <UploadCard key={i} initFile={src} />
+      ))}
     </StandardLayout>
   )
 })`
+  flex-direction: column;
+
+  .wrapper {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
 `
 
 export { UploadScreen }
