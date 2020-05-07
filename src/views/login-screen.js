@@ -25,7 +25,7 @@ const LoginScreen = styled(({ className }) => {
   }
 
   return (
-    <StandardLayout className={className}>
+    <StandardLayout className={['main', className].join(' ')}>
       <form onSubmit={handleSubmit}>
         <div>
           <input
@@ -53,6 +53,10 @@ const LoginScreen = styled(({ className }) => {
       </form>
     </StandardLayout>
   )
-})``
+})`
+  .main {
+    justify-content: center;
+  }
+`
 
 export { LoginScreen }
