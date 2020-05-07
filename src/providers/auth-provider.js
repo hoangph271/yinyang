@@ -18,12 +18,11 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const loginWithStoredCredentials = async () => {
+      if (_.isNil(navigator.credentials)) return
+
       // FIXME: Handle loading case...?
       setIsLoading(true)
-
       const credentials = await navigator.credentials.get({ password: true })
-
-      if (_.isNil(credentials)) return
 
       const { id: username, password } = credentials
       const res = await fetchLogin({ username, password })
