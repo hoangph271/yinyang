@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { API_ROOT } from '../consts'
+import _ from 'lodash'
 
 const AuthContext = createContext()
 
@@ -20,7 +21,11 @@ const AuthProvider = ({ children }) => {
       // FIXME: Handle loading case...?
       setIsLoading(true)
 
-      const { id: username, password } = await navigator.credentials.get({ password: true })
+      const credentials = await navigator.credentials.get({ password: true })
+
+      if (_.isNil(credentials)) return
+
+      const { id: username, password } = credentials
       const res = await fetchLogin({ username, password })
 
       if (res.ok) {
