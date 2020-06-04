@@ -21,8 +21,11 @@ const AuthProvider = ({ children }) => {
       if (_.isNil(navigator.credentials)) return
 
       // FIXME: Handle loading case...?
-      setIsLoading(true)
       const credentials = await navigator.credentials.get({ password: true })
+
+      if (_.isNil(credentials)) return
+
+      setIsLoading(true)
 
       const { id: username, password } = credentials
       const res = await fetchLogin({ username, password })
