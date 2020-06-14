@@ -1,11 +1,11 @@
 import React from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { HashRouter, Switch, Route } from 'react-router-dom'
 import * as Views from './views'
 import { AuthProvider } from './providers'
 
 const AppRouter = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Switch>
         <Route path="/auth">
           <Views.LoginScreen />
@@ -23,7 +23,7 @@ const AppRouter = () => {
           <Views.NotFoundScreen />
         </Route>
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
