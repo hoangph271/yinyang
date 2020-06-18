@@ -140,8 +140,9 @@ const MediaList = styled(({ className, onMediaClicked, medias }) => {
       left: 0;
     }
   }
-  article:hover .title {
-    background-color: rgba(45, 52, 54, 0.8);
+  article:hover {
+    box-shadow: rgb(0, 0, 0) 5px 5px 10px;
+    transform: scale(1.05);
   }
 `
 
